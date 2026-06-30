@@ -1,4 +1,26 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("./db", () => ({
+  getInvestigacionesPublicadas: vi.fn(async () => []),
+  createInvestigacion: vi.fn(async () => ({ insertId: 1 })),
+  getParticipaciones: vi.fn(async () => []),
+  createParticipacion: vi.fn(async data => ({
+    id: 1,
+    ...data,
+    estado: "pendiente",
+    respuesta: null,
+    createdAt: new Date("2026-01-01T00:00:00.000Z"),
+    updatedAt: new Date("2026-01-01T00:00:00.000Z"),
+  })),
+  getDatosAbiertos: vi.fn(async () => []),
+  createDatoAbierto: vi.fn(async () => ({ insertId: 1 })),
+  getFuentesOficiales: vi.fn(async () => []),
+}));
+
+vi.mock("./_core/notification", () => ({
+  notifyOwner: vi.fn(async () => true),
+}));
+
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
 
